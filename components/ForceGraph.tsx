@@ -152,7 +152,9 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
       tip.style.left = bounds.left + bounds.width / 2 + 'px';
       tip.style.top = bounds.top - 10 + 'px';
       tip.style.transform = 'translateX(-50%) translateY(-100%)';
-      tip.innerHTML = `
+      
+      // Enhanced tooltip content with insights
+      let tooltipContent = `
         <strong style="color:#4fc3f7;display:block;margin-bottom:8px;font-size:14px">${d.label}</strong>
         <div style="display:flex;justify-content:space-between;margin:4px 0;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
           <span style="color:#aaa">Community</span>
@@ -162,11 +164,66 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
           <span style="color:#aaa">Articles</span>
           <span style="color:#fff;font-weight:600">${d.articles}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;margin:4px 0;padding:4px 0;">
+        <div style="display:flex;justify-content:space-between;margin:4px 0;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
           <span style="color:#aaa">Connections</span>
           <span style="color:#fff;font-weight:600">${connected.size}</span>
-        </div>
-      `;
+        </div>`;
+      
+      if (d.theme) {
+        tooltipContent += `
+        <div style="display:flex;justify-content:space-between;margin:4px 0;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
+          <span style="color:#aaa">Theme</span>
+          <span style="color:#fff;font-weight:600">${d.theme}</span>
+        </div>`;
+      }
+      
+      if (d.confidence !== undefined) {
+        tooltipContent += `
+        <div style="display:flex;justify-content:space-between;margin:4px 0;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
+          <span style="color:#aaa">Confidence</span>
+          <span style="color:#fff;font-weight:600">${(d.confidence * 100).toFixed(1)}%</span>
+        </div>`;
+      }
+      
+      if (d.description) {
+        tooltipContent += `
+        <div style="margin:8px 0;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
+          <span style="color:#aaa;display:block;margin-bottom:4px">Description</span>
+          <span style="color:#fff;font-size:12px;font-style:italic">"${d.description.length > 120 ? d.description.substring(0, 120) + '...' : d.description}"</span>
+        </div>`;
+      }
+      
+      if (d.insights && d.insights.length > 0) {
+        tooltipContent += `
+        <div style="margin:8px 0;padding:4px 0">
+          <span style="color:#aaa;display:block;margin-bottom:4px">Key Insights</span>
+          <div style="max-height:100px;overflow-y:auto">`;
+        
+        d.insights.slice(0, 3).forEach((insight: string) => {
+          tooltipContent += `
+            <div style="color:#fff;font-size:11px;margin:2px 0;padding:3px 6px;background:rgba(79,195,247,0.2);border-radius:3px">
+              • ${insight.length > 80 ? insight.substring(0, 80) + '...' : insight}
+            </div>`;
+        });
+        
+        if (d.insights.length > 3) {
+          tooltipContent += `
+            <div style="color:#aaa;font-size:10px;margin-top:4px;font-style:italic">
+              +${d.insights.length - 3} more insights...
+            </div>`;
+        }
+        
+        tooltipContent += `</div></div>`;
+      }
+      
+      if (d.referenceDate) {
+        tooltipContent += `
+        <div style="margin-top:8px;padding-top:4px;border-top:1px solid rgba(255,255,255,0.1)">
+          <span style="color:#aaa;font-size:10px">${d.referenceDate}</span>
+        </div>`;
+      }
+      
+      tip.innerHTML = tooltipContent;
     };
 
     const hideTooltip = () => {

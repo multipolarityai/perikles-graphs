@@ -3,6 +3,11 @@ export type Node = {
   label: string;
   articles: number;
   community: number;
+  description?: string;
+  theme?: string;
+  confidence?: number;
+  insights?: string[];
+  referenceDate?: string;
 };
 
 export type Link = {
@@ -15,6 +20,14 @@ export type Link = {
 export type GraphData = {
   nodes: Node[];
   links?: Link[];
+  metadata?: {
+    numCommunities?: number;
+    modularityScore?: number;
+    algorithmUsed?: string;
+    networkProperties?: any;
+    communitySummaries?: any;
+    processingTime?: number;
+  };
 };
 
 export type Query = {

@@ -8,6 +8,8 @@ type ApiTopic = {
   reference_date: string;
   topic_description: string;
   confidence_score: number;
+  topic_insights: string[];
+  articles: number;
 };
 
 export async function fetchGraphData(params: Query): Promise<GraphData> {
@@ -68,14 +70,30 @@ export async function fetchGraphData(params: Query): Promise<GraphData> {
       return {
         id: id,
         label: t.topic_label,
-        articles: 1, // Default value since not provided by API
+        articles: t.articles || 0,
         community: t.community_id,
+        description: t.topic_description,
+        theme: t.theme,
+        confidence: t.confidence_score,
+        insights: t.topic_insights || [],
+        referenceDate: t.reference_date,
       };
     });
     
     console.log('Transformed nodes:', nodes.length);
     
-    return { nodes, links: [] } as GraphData;
+    return { 
+      nodes, 
+      links: [],
+      metadata: {
+        numCommunities: data.num_communities,
+        modularityScore: data.modularity_score,
+        algorithmUsed: data.algorithm_used,
+        networkProperties: data.network_properties,
+        communitySummaries: data.community_summaries,
+        processingTime: data.processing_time,
+      }
+    } as GraphData;
   }
   
   // Fallback: check if it already has the expected structure
