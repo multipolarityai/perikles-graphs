@@ -1,8 +1,8 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { COMMUNITY_COLORS, cloneGraphData, generateLinksFromCommunities } from '@/lib/graph';
-import type { GraphData } from '@/lib/types';
+import type { GraphData, Node } from '@/lib/types';
 
 export type ForceGraphProps = {
   data: GraphData | null;
@@ -25,6 +25,7 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
 }) => {
   const [dimensions, setDimensions] = React.useState({ width: 1200, height: 800 });
   const [isMounted, setIsMounted] = React.useState(false);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
@@ -81,6 +82,16 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
       });
 
     root.call(zoom as any);
+
+    // Add click handler to clear selection when clicking on empty space
+    root.on('click', function(event) {
+      if (event.target === svgRef.current) {
+        setSelectedNode(null);
+        // Reset all highlighting
+        node.style('opacity', 1);
+        link.style('opacity', (l: any) => (l.type === 'intra' ? 0.15 : 0.05));
+      }
+    });
 
     const defs = root.append('defs');
     const filter = defs.append('filter').attr('id', 'glow');
@@ -234,6 +245,27 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
       tip.style.opacity = '0';
     };
 
+    const handleNodeClick = (event: MouseEvent, d: any) => {
+      event.stopPropagation();
+      setSelectedNode(d);
+      
+      // Highlight connected nodes for the clicked node
+      const connected = new Set<string>();
+      links.forEach((l: any) => {
+        const sid = typeof l.source === 'object' ? (l.source as any).id : (l.source as any);
+        const tid = typeof l.target === 'object' ? (l.target as any).id : (l.target as any);
+        if (sid === d.id) connected.add(tid as string);
+        if (tid === d.id) connected.add(sid as string);
+      });
+
+      node.style('opacity', (n: any) => (connected.has(n.id) || n.id === d.id ? 1 : 0.3));
+      link.style('opacity', (l: any) => {
+        const sid = typeof l.source === 'object' ? (l.source as any).id : (l.source as any);
+        const tid = typeof l.target === 'object' ? (l.target as any).id : (l.target as any);
+        return sid === d.id || tid === d.id ? 0.8 : 0.1;
+      });
+    };
+
     const drag = d3
       .drag<SVGGElement, any>()
       .on('start', (event, d) => {
@@ -253,6 +285,7 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
 
     node.on('mouseover', function (event, d) { showTooltip(event as unknown as MouseEvent, d); })
         .on('mouseout', hideTooltip)
+        .on('click', function (event, d) { handleNodeClick(event as unknown as MouseEvent, d); })
         .call(drag as any);
 
     const sim = d3
@@ -339,6 +372,86 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
         className="pointer-events-none absolute z-50 rounded-lg border border-white/10 bg-[rgba(20,20,30,0.95)] px-4 py-3 text-sm text-white shadow-2xl backdrop-blur-md"
         style={{ opacity: 0, maxWidth: 350, lineHeight: 1.5 }}
       />
+
+      {/* Persistent Detail Panel */}
+      {selectedNode && (
+        <div className="absolute top-4 right-4 w-96 max-h-[80vh] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl overflow-hidden z-50">
+          <div className="p-4 border-b border-gray-200 bg-white/90">
+            <div className="flex justify-between items-start">
+              <h2 className="font-bold text-lg text-gray-900 pr-4">{selectedNode.label}</h2>
+              <button
+                onClick={() => setSelectedNode(null)}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          
+          <div className="overflow-y-auto max-h-[calc(80vh-80px)]">
+            <div className="p-4 space-y-4">
+              {/* Basic Information */}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <div className="text-blue-600 font-medium">Articles</div>
+                  <div className="text-xl font-bold text-blue-800">{selectedNode.articles}</div>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <div className="text-green-600 font-medium">Community</div>
+                  <div className="text-xl font-bold text-green-800">{selectedNode.community}</div>
+                </div>
+              </div>
+
+              {/* Theme and Confidence */}
+              {(selectedNode.theme || selectedNode.confidence !== undefined) && (
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  {selectedNode.theme && (
+                    <div className="bg-purple-50 p-3 rounded-lg">
+                      <div className="text-purple-600 font-medium">Theme</div>
+                      <div className="font-bold text-purple-800">{selectedNode.theme}</div>
+                    </div>
+                  )}
+                  {selectedNode.confidence !== undefined && (
+                    <div className="bg-orange-50 p-3 rounded-lg">
+                      <div className="text-orange-600 font-medium">Confidence</div>
+                      <div className="text-xl font-bold text-orange-800">{(selectedNode.confidence * 100).toFixed(1)}%</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Description */}
+              {selectedNode.description && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
+                  <p className="text-gray-700 italic leading-relaxed">"{selectedNode.description}"</p>
+                </div>
+              )}
+
+              {/* Full Insights List */}
+              {selectedNode.insights && selectedNode.insights.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Key Insights ({selectedNode.insights.length})</h3>
+                  <div className="space-y-3">
+                    {selectedNode.insights.map((insight, index) => (
+                      <div key={index} className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                        <div className="text-blue-800 leading-relaxed">{insight}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Reference Date */}
+              {selectedNode.referenceDate && (
+                <div className="text-xs text-gray-500 border-t pt-3">
+                  <span className="font-medium">Reference Date:</span> {selectedNode.referenceDate}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
