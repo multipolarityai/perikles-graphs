@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { COMMUNITY_COLORS, cloneGraphData, generateLinksFromCommunities } from '@/lib/graph';
+import { generateCommunityColor, cloneGraphData, generateLinksFromCommunities } from '@/lib/graph';
 import type { GraphData, Node } from '@/lib/types';
 
 export type ForceGraphProps = {
@@ -123,7 +123,7 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
 
         ng.append('circle')
           .attr('r', (d: any) => Math.sqrt(d.articles) * 3)
-          .attr('fill', (d: any) => COMMUNITY_COLORS[d.community] || '#999')
+          .attr('fill', (d: any) => generateCommunityColor(d.community))
           .style('filter', 'url(#glow)');
 
         ng.append('text')
@@ -305,14 +305,34 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
         'x',
         d3
           .forceX()
-          .x((d: any) => ({ 0: dimensions.width * 0.3, 1: dimensions.width * 0.7, 2: dimensions.width * 0.5, 3: dimensions.width * 0.3, 4: dimensions.width * 0.7 }[(d as any).community]))
+          .x((d: any) => {
+            const communityIdx = typeof d.community === 'number' ? d.community : parseInt(d.community, 10);
+            const xMap: Record<number, number> = {
+              0: dimensions.width * 0.3,
+              1: dimensions.width * 0.7,
+              2: dimensions.width * 0.5,
+              3: dimensions.width * 0.3,
+              4: dimensions.width * 0.7,
+            };
+            return xMap[communityIdx] ?? (dimensions.width / 2);
+          })
           .strength(0.05)
       )
       .force(
         'y',
         d3
           .forceY()
-          .y((d: any) => ({ 0: dimensions.height * 0.35, 1: dimensions.height * 0.35, 2: dimensions.height * 0.5, 3: dimensions.height * 0.65, 4: dimensions.height * 0.65 }[(d as any).community]))
+          .y((d: any) => {
+            const communityIdx = typeof d.community === 'number' ? d.community : parseInt(d.community, 10);
+            const yMap: Record<number, number> = {
+              0: dimensions.height * 0.35,
+              1: dimensions.height * 0.35,
+              2: dimensions.height * 0.5,
+              3: dimensions.height * 0.65,
+              4: dimensions.height * 0.65,
+            };
+            return yMap[communityIdx] ?? (dimensions.height / 2);
+          })
           .strength(0.05)
       );
 
@@ -348,6 +368,7 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
       sim.stop();
       simulationRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, linkDistance, chargeStrength, collisionPad, showLabels, dimensions.width, dimensions.height]);
 
   // Don't render the graph until mounted to prevent hydration issues
@@ -369,8 +390,7 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
 
       <div
         ref={tooltipRef}
-        className="pointer-events-none absolute z-50 rounded-lg border border-white/10 bg-[rgba(20,20,30,0.95)] px-4 py-3 text-sm text-white shadow-2xl backdrop-blur-md"
-        style={{ opacity: 0, maxWidth: 350, lineHeight: 1.5 }}
+        className="pointer-events-none absolute z-50 rounded-lg border border-white/10 bg-[rgba(20,20,30,0.95)] px-4 py-3 text-sm text-white shadow-2xl backdrop-blur-md opacity-0 max-w-[350px] leading-[1.5]"
       />
 
       {/* Persistent Detail Panel */}

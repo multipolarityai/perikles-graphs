@@ -24,8 +24,8 @@ export type GraphData = {
     numCommunities?: number;
     modularityScore?: number;
     algorithmUsed?: string;
-    networkProperties?: any;
-    communitySummaries?: any;
+    networkProperties?: Record<string, unknown>;
+    communitySummaries?: Record<string, unknown>;
     processingTime?: number;
   };
 };

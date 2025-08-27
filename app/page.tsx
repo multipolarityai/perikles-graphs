@@ -94,9 +94,9 @@ export default function Page() {
       
       {/* Add metadata display if available */}
       {graph?.metadata && (
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg max-w-xs">
-          <h3 className="font-semibold text-gray-900 border-b pb-1 mb-2">Network Analysis</h3>
-          <div className="space-y-1 text-sm">
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-lg max-w-xs z-40">
+          <h3 className="font-semibold text-gray-900 border-b pb-1 mb-2 text-sm">Network Analysis</h3>
+          <div className="space-y-1 text-xs">
             {graph.metadata.algorithmUsed && (
               <div>
                 <span className="text-gray-600">Algorithm:</span>

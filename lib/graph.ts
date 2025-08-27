@@ -37,20 +37,46 @@ export function generateLinksFromCommunities(nodes: Node[]): Link[] {
   return links;
 }
 
-export const COMMUNITY_COLORS: Record<number, string> = {
-  0: '#FF6B6B',
-  1: '#4ECDC4',
-  2: '#45B7D1',
-  3: '#96CEB4',
-  4: '#FFEAA7',
-};
+export const BASE_COMMUNITY_COLORS: string[] = [
+  '#FF6B6B',
+  '#4ECDC4',
+  '#45B7D1',
+  '#96CEB4',
+  '#FFEAA7',
+  '#DDA0DD',
+  '#98D8C8',
+  '#F7DC6F',
+  '#BB8FCE',
+  '#85C1E9',
+  '#F8C471',
+  '#82E0AA',
+  '#F1948A',
+  '#85C1E9',
+  '#F4D03F',
+];
+
+function generateCommunityColor(communityId: number): string {
+  // Use predefined colors first, then generate colors dynamically
+  if (communityId < BASE_COMMUNITY_COLORS.length) {
+    return BASE_COMMUNITY_COLORS[communityId];
+  }
+  
+  // Generate colors using HSL for better distribution
+  const hue = (communityId * 137.508) % 360; // Golden angle approximation for good distribution
+  const saturation = 65 + (communityId % 3) * 10; // Vary saturation slightly
+  const lightness = 55 + (communityId % 4) * 5; // Vary lightness slightly
+  
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+export { generateCommunityColor };
 
 export function summarizeCommunities(nodes: Node[]) {
   const counts = new Map<number, number>();
   for (const n of nodes) counts.set(n.community, (counts.get(n.community) ?? 0) + 1);
   return [...counts.entries()]
     .sort((a, b) => a[0] - b[0])
-    .map(([community, count]) => ({ community, count, color: COMMUNITY_COLORS[community] }));
+    .map(([community, count]) => ({ community, count, color: generateCommunityColor(community) }));
 }
 
 export function graphStats(nodes: Node[], links: Link[]) {
