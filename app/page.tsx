@@ -4,6 +4,7 @@ import { ForceGraph } from '@/components/ForceGraph';
 import { Controls } from '@/components/Controls';
 import { Legend } from '@/components/Legend';
 import { StatsBar } from '@/components/StatsBar';
+import { Navigation } from '@/components/Navigation';
 import { fetchGraphData } from '@/lib/api';
 import { generateLinksFromCommunities } from '@/lib/graph';
 import type { GraphData, Query } from '@/lib/types';
@@ -70,7 +71,12 @@ export default function Page() {
 
   return (
     <main className="relative h-screen w-screen">
-      <ForceGraph data={graph} linkDistance={linkDistance} chargeStrength={chargeStrength} collisionPad={collisionPad} showLabels={showLabels} />
+      <Navigation />
+      
+      {/* Main content with top padding to account for navigation */}
+      <div className="pt-20 h-full">
+        <ForceGraph data={graph} linkDistance={linkDistance} chargeStrength={chargeStrength} collisionPad={collisionPad} showLabels={showLabels} />
+      </div>
 
       <Controls
         query={query}
@@ -94,7 +100,7 @@ export default function Page() {
       
       {/* Add metadata display if available */}
       {graph?.metadata && (
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-lg max-w-xs z-40">
+        <div className="absolute top-24 right-4 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-lg max-w-xs z-40">
           <h3 className="font-semibold text-gray-900 border-b pb-1 mb-2 text-sm">Network Analysis</h3>
           <div className="space-y-1 text-xs">
             {graph.metadata.algorithmUsed && (

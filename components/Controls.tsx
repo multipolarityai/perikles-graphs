@@ -38,7 +38,7 @@ export const Controls: React.FC<ControlsProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="absolute left-4 top-4 z-40 min-w-[300px] max-w-[320px] max-h-[calc(100vh-2rem)] overflow-y-auto rounded-xl border border-white/10 bg-[rgba(20,20,30,0.92)] shadow-xl backdrop-blur-md">
+    <div className="absolute left-4 top-24 z-40 min-w-[300px] max-w-[320px] max-h-[calc(100vh-8rem)] overflow-y-auto rounded-xl border border-white/10 bg-[rgba(20,20,30,0.92)] shadow-xl backdrop-blur-md">
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <h3 className="text-base font-semibold text-sky-300">Controls</h3>
         <button 
