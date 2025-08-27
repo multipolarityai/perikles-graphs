@@ -3,11 +3,76 @@ import { generateLinksFromCommunities } from '@/lib/graph';
 
 export function getMockNodes(): Node[] {
   return [
-    { id: '6485c9ca', label: 'RBI Monetary Policy', articles: 10, community: 0 },
-    { id: '426b6a8d', label: 'Global Currency Fluctuations', articles: 26, community: 0 },
-    { id: 'ce16a3ec', label: 'USD Impact on Gold', articles: 32, community: 0 },
-    { id: '5312792e', label: 'Rising Inflation Trends', articles: 49, community: 0 },
-    { id: '0a090a9a', label: 'EUR/USD Forecasts', articles: 13, community: 0 },
+    { 
+      id: '6485c9ca', 
+      label: 'RBI Monetary Policy', 
+      articles: 10, 
+      community: 0,
+      description: 'Analysis of Reserve Bank of India monetary policy decisions and their impact on the economy.',
+      theme: 'Global Economy',
+      confidence: 0.92,
+      insights: [
+        'Interest rate decisions significantly impact inflation expectations',
+        'RBI policy affects currency stability and foreign investment flows',
+        'Monetary policy coordination with fiscal measures shows positive results'
+      ]
+    },
+    { 
+      id: '426b6a8d', 
+      label: 'Global Currency Fluctuations', 
+      articles: 26, 
+      community: 0,
+      description: 'Comprehensive analysis of worldwide currency exchange rate movements and their underlying factors.',
+      theme: 'Global Economy',
+      confidence: 0.88,
+      insights: [
+        'USD strength affects emerging market currencies disproportionately',
+        'Central bank interventions have limited long-term effectiveness',
+        'Geopolitical tensions drive safe-haven currency demand'
+      ]
+    },
+    { 
+      id: 'ce16a3ec', 
+      label: 'USD Impact on Gold', 
+      articles: 32, 
+      community: 0,
+      description: 'Examination of the inverse relationship between US Dollar strength and gold prices.',
+      theme: 'Gold',
+      confidence: 0.95,
+      insights: [
+        'Strong USD typically leads to lower gold prices',
+        'Gold serves as inflation hedge during dollar weakness',
+        'Central bank gold purchases offset USD impact partially'
+      ]
+    },
+    { 
+      id: '5312792e', 
+      label: 'Rising Inflation Trends', 
+      articles: 49, 
+      community: 0,
+      description: 'Analysis of global inflation patterns and their economic implications.',
+      theme: 'Global Economy',
+      confidence: 0.87,
+      insights: [
+        'Supply chain disruptions contribute to persistent inflation',
+        'Energy prices remain a key inflation driver',
+        'Labor market tightness supports wage-price spirals'
+      ]
+    },
+    { 
+      id: '0a090a9a', 
+      label: 'EUR/USD Forecasts', 
+      articles: 13, 
+      community: 0,
+      description: 'Expert predictions and analysis of Euro to US Dollar exchange rate movements.',
+      theme: 'Global Economy',
+      confidence: 0.82,
+      insights: [
+        'ECB policy divergence from Fed affects EUR/USD parity',
+        'Economic growth differentials drive currency expectations',
+        'Political stability impacts long-term exchange rate trends'
+      ]
+    },
     { id: '2c2c37c5', label: 'Asian/African Currencies', articles: 34, community: 0 },
     { id: '5557131e', label: 'UK Inflation Markets', articles: 12, community: 0 },
     { id: '0d7d46f5', label: 'UK Food Inflation', articles: 14, community: 0 },
@@ -23,12 +88,38 @@ export function getMockNodes(): Node[] {
     { id: '9df29ee8', label: 'UK Airfare/Food Inflation', articles: 22, community: 0 },
     { id: 'aec31c43', label: 'Bulgaria Euro Adoption', articles: 10, community: 0 },
 
-    { id: '020b1dec', label: 'Tariffs on US Retailers', articles: 26, community: 1 },
+    { 
+      id: '020b1dec', 
+      label: 'Tariffs on US Retailers', 
+      articles: 26, 
+      community: 1,
+      description: 'Impact analysis of trade tariffs on American retail sector operations and pricing.',
+      theme: 'Global Economy',
+      confidence: 0.91,
+      insights: [
+        'Retailers face margin pressure from increased import costs',
+        'Consumer prices likely to rise as tariffs are passed through',
+        'Small retailers more vulnerable than large chains to tariff impacts'
+      ]
+    },
     { id: 'c2041c85', label: 'ECB Trade Views', articles: 32, community: 1 },
     { id: '96ab5273', label: 'US-China Trade', articles: 14, community: 1 },
     { id: '4754791c', label: 'US Tariffs on India', articles: 36, community: 1 },
     { id: '21aa9290', label: 'Tariffs Consumer Impact', articles: 11, community: 1 },
-    { id: '6a95ee3e', label: 'Trump Tariffs Policy', articles: 43, community: 1 },
+    { 
+      id: '6a95ee3e', 
+      label: 'Trump Tariffs Policy', 
+      articles: 43, 
+      community: 1,
+      description: 'Comprehensive analysis of Trump administration tariff policies and their economic effects.',
+      theme: 'Global Economy',
+      confidence: 0.89,
+      insights: [
+        'Tariff policies aim to protect domestic manufacturing',
+        'Retaliatory tariffs create complex global trade dynamics',
+        'Long-term effectiveness of tariffs remains economically debated'
+      ]
+    },
     { id: '7283f824', label: 'Tariffs on US Business', articles: 17, community: 1 },
     { id: '0c176058', label: 'Tariffs Consumer Prices', articles: 23, community: 1 },
     { id: '7191c234', label: 'Tariffs Manufacturing', articles: 19, community: 1 },

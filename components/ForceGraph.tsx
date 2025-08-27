@@ -164,7 +164,7 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
       tip.style.top = bounds.top - 10 + 'px';
       tip.style.transform = 'translateX(-50%) translateY(-100%)';
       
-      // Enhanced tooltip content with insights
+      // Enhanced tooltip content
       let tooltipContent = `
         <strong style="color:#4fc3f7;display:block;margin-bottom:8px;font-size:14px">${d.label}</strong>
         <div style="display:flex;justify-content:space-between;margin:4px 0;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
@@ -202,29 +202,6 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
           <span style="color:#aaa;display:block;margin-bottom:4px">Description</span>
           <span style="color:#fff;font-size:12px;font-style:italic">"${d.description.length > 120 ? d.description.substring(0, 120) + '...' : d.description}"</span>
         </div>`;
-      }
-      
-      if (d.insights && d.insights.length > 0) {
-        tooltipContent += `
-        <div style="margin:8px 0;padding:4px 0">
-          <span style="color:#aaa;display:block;margin-bottom:4px">Key Insights</span>
-          <div style="max-height:100px;overflow-y:auto">`;
-        
-        d.insights.slice(0, 3).forEach((insight: string) => {
-          tooltipContent += `
-            <div style="color:#fff;font-size:11px;margin:2px 0;padding:3px 6px;background:rgba(79,195,247,0.2);border-radius:3px">
-              • ${insight.length > 80 ? insight.substring(0, 80) + '...' : insight}
-            </div>`;
-        });
-        
-        if (d.insights.length > 3) {
-          tooltipContent += `
-            <div style="color:#aaa;font-size:10px;margin-top:4px;font-style:italic">
-              +${d.insights.length - 3} more insights...
-            </div>`;
-        }
-        
-        tooltipContent += `</div></div>`;
       }
       
       if (d.referenceDate) {
