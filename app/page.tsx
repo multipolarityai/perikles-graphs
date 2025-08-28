@@ -23,14 +23,15 @@ export default function Page() {
   const [query, setQuery] = useState<Query>({ 
     start_date: yesterdayString, 
     end_date: yesterdayString, 
-    theme: 'Gold',
+    theme: ['Gold'], // Default to single theme in array
     similarity_threshold: 0.3,
     clustering_algorithm: 'leiden',
     resolution: 1.0,
     use_gpu: true,
     random_state: 42,
     max_iterations: 100,
-    max_topics: 100 // Limit to 100 topics for faster processing
+    max_topics: 100, // Limit to 100 topics for faster processing
+    save_to_db: false
   });
 
   const [showLabels, setShowLabels] = useState(false);

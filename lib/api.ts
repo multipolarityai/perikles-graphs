@@ -28,6 +28,7 @@ export async function fetchGraphData(params: Query): Promise<GraphData> {
     n_clusters: params.n_clusters,
     random_state: params.random_state ?? 42,
     max_iterations: params.max_iterations ?? 100,
+    save_to_db: params.save_to_db ?? false,
   };
 
   console.log('Making request to:', url);

@@ -19,6 +19,19 @@ export type ControlsProps = {
   canUseMock: boolean;
 };
 
+const PREDEFINED_THEMES = [
+  "Global Economy",
+  "Oil",
+  "Crypto",
+  "Gold",
+  "Equities",
+  "Multipolarity",
+  "AI",
+  "EV",
+  "Ukraine",
+  "Middle East"
+];
+
 export const Controls: React.FC<ControlsProps> = ({
   query,
   setQuery,
@@ -36,6 +49,26 @@ export const Controls: React.FC<ControlsProps> = ({
   canUseMock,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  
+  // Convert theme to array for multi-select handling
+  const selectedThemes = Array.isArray(query.theme) ? query.theme : (query.theme ? [query.theme] : []);
+  
+  const handleThemeToggle = (theme: string) => {
+    const currentThemes = selectedThemes;
+    const isSelected = currentThemes.includes(theme);
+    
+    if (isSelected) {
+      // Remove theme
+      const newThemes = currentThemes.filter(t => t !== theme);
+      setQuery({ ...query, theme: newThemes.length === 0 ? undefined : newThemes });
+    } else {
+      // Add theme (max 3)
+      if (currentThemes.length < 3) {
+        const newThemes = [...currentThemes, theme];
+        setQuery({ ...query, theme: newThemes });
+      }
+    }
+  };
 
   return (
     <div className="absolute left-4 top-24 z-40 min-w-[300px] max-w-[320px] max-h-[calc(100vh-8rem)] overflow-y-auto rounded-xl border border-white/10 bg-[rgba(20,20,30,0.92)] shadow-xl backdrop-blur-md">
@@ -72,24 +105,40 @@ export const Controls: React.FC<ControlsProps> = ({
         aria-label="End Date"
       />
 
-      <label className="block text-xs text-gray-300">Theme</label>
-      <select 
-        className="w-full rounded-md border border-white/10 bg-transparent p-2 text-white outline-none"
-        value={typeof query.theme === 'string' ? query.theme : query.theme?.join(', ') || 'Global Economy'} 
-        onChange={(e) => setQuery({ ...query, theme: e.target.value })} 
-        aria-label="Theme"
-      >
-        <option value="Global Economy" className="bg-gray-800">Global Economy</option>
-        <option value="Oil" className="bg-gray-800">Oil</option>
-        <option value="Crypto" className="bg-gray-800">Crypto</option>
-        <option value="Gold" className="bg-gray-800">Gold</option>
-        <option value="Equities" className="bg-gray-800">Equities</option>
-        <option value="Multipolarity" className="bg-gray-800">Multipolarity</option>
-        <option value="AI" className="bg-gray-800">AI</option>
-        <option value="EV" className="bg-gray-800">EV</option>
-        <option value="Ukraine" className="bg-gray-800">Ukraine</option>
-        <option value="Middle East" className="bg-gray-800">Middle East</option>
-      </select>
+      <label className="block text-xs text-gray-300">Themes (max 3)</label>
+      <div className="space-y-2">
+        <div className="text-xs text-sky-300 mb-2">
+          Selected: {selectedThemes.length}/3 - {selectedThemes.join(', ') || 'None'}
+        </div>
+        <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+          {PREDEFINED_THEMES.map((theme) => {
+            const isSelected = selectedThemes.includes(theme);
+            const isDisabled = !isSelected && selectedThemes.length >= 3;
+            return (
+              <label 
+                key={theme}
+                className={`flex items-center gap-2 p-2 rounded text-xs cursor-pointer transition-colors ${
+                  isSelected 
+                    ? 'bg-sky-500/20 border border-sky-400 text-sky-300' 
+                    : isDisabled 
+                      ? 'bg-gray-700/50 border border-gray-600 text-gray-500 cursor-not-allowed'
+                      : 'bg-white/5 border border-white/20 text-white hover:bg-white/10'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  disabled={isDisabled}
+                  onChange={() => handleThemeToggle(theme)}
+                  className="w-3 h-3"
+                  aria-label={`Select ${theme} theme`}
+                />
+                <span className={isDisabled ? 'text-gray-500' : ''}>{theme}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
 
       <label className="block text-xs text-gray-300">Similarity Threshold</label>
       <input 
@@ -149,13 +198,27 @@ export const Controls: React.FC<ControlsProps> = ({
         <label className="text-xs text-gray-200">Use GPU acceleration</label>
       </div>
 
+      <div className="flex items-center gap-2">
+        <input 
+          type="checkbox" 
+          checked={query.save_to_db ?? false} 
+          onChange={(e) => setQuery({ ...query, save_to_db: e.target.checked })} 
+          aria-label="Save communities to database"
+        />
+        <label className="text-xs text-gray-200">Save communities to database</label>
+      </div>
+
       <div className="mt-3 flex gap-2">
         <button 
-          className="rounded-md bg-sky-400 px-3 py-2 text-sm font-medium text-white transition hover:-translate-y-px hover:bg-sky-500 hover:shadow-lg disabled:bg-gray-500 disabled:cursor-not-allowed" 
+          className={`rounded-md px-3 py-2 text-sm font-medium text-white transition hover:-translate-y-px hover:shadow-lg disabled:bg-gray-500 disabled:cursor-not-allowed ${
+            query.save_to_db 
+              ? 'bg-green-600 hover:bg-green-700' 
+              : 'bg-sky-400 hover:bg-sky-500'
+          }`}
           onClick={onFetch}
           disabled={loading}
         >
-          {loading ? 'Fetching...' : 'Fetch Data'}
+          {loading ? 'Fetching...' : query.save_to_db ? 'Fetch & Save' : 'Fetch Data'}
         </button>
         {canUseMock && (
           <button className="rounded-md bg-white/10 px-3 py-2 text-sm font-medium text-white transition hover:-translate-y-px hover:bg-white/20 hover:shadow-lg" onClick={onLoadMock}>
@@ -163,6 +226,12 @@ export const Controls: React.FC<ControlsProps> = ({
           </button>
         )}
       </div>
+      
+      {query.save_to_db && (
+        <div className="mt-2 p-2 bg-green-900/20 border border-green-500/30 rounded text-xs text-green-300">
+          ⚠️ Communities will be saved to database
+        </div>
+      )}
       </div>
 
       <div className="my-4 h-px w-full bg-white/10" />

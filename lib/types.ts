@@ -42,4 +42,5 @@ export type Query = {
   n_clusters?: number;
   random_state?: number;
   max_iterations?: number;
+  save_to_db?: boolean;
 };
