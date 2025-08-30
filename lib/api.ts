@@ -7,7 +7,6 @@ type ApiTopic = {
   theme: string;
   reference_date: string;
   topic_description: string;
-  confidence_score: number;
   topic_insights: string[];
   articles: number;
 };
@@ -75,7 +74,6 @@ export async function fetchGraphData(params: Query): Promise<GraphData> {
         community: t.community_id,
         description: t.topic_description,
         theme: t.theme,
-        confidence: t.confidence_score,
         insights: t.topic_insights || [],
         referenceDate: t.reference_date,
       };

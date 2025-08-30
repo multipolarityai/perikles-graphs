@@ -399,25 +399,17 @@ export const ForceGraph: React.FC<ForceGraphProps> = ({
                 </div>
               </div>
 
-              {/* Theme and Confidence */}
-              {(selectedNode.theme || selectedNode.confidence !== undefined) && (
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  {selectedNode.theme && (
-                    <div className="bg-purple-50 p-3 rounded-lg">
+              {/* Theme */}
+              {selectedNode.theme && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div>
                       <div className="text-purple-600 font-medium">Theme</div>
-                      <div className="font-bold text-purple-800">{selectedNode.theme}</div>
+                      <div className="text-lg font-semibold text-purple-800 capitalize">{selectedNode.theme}</div>
                     </div>
-                  )}
-                  {selectedNode.confidence !== undefined && (
-                    <div className="bg-orange-50 p-3 rounded-lg">
-                      <div className="text-orange-600 font-medium">Confidence</div>
-                      <div className="text-xl font-bold text-orange-800">{(selectedNode.confidence * 100).toFixed(1)}%</div>
-                    </div>
-                  )}
+                  </div>
                 </div>
-              )}
-
-              {/* Description */}
+              )}              {/* Description */}
               {selectedNode.description && (
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-gray-900 mb-2">Description</h3>

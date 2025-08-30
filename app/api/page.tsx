@@ -86,8 +86,7 @@ export default function APIPage() {
       "articles": 42,
       "insights": ["Price volatility", "Market trends"],
       "description": "Analysis of gold market...",
-      "theme": "Gold",
-      "confidence": 0.95
+      "theme": "Gold"
     }
   ],
   "links": [

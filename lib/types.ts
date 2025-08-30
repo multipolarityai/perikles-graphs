@@ -5,7 +5,6 @@ export type Node = {
   community: number;
   description?: string;
   theme?: string;
-  confidence?: number;
   insights?: string[];
   referenceDate?: string;
 };

@@ -10,7 +10,6 @@ export function getMockNodes(): Node[] {
       community: 0,
       description: 'Analysis of Reserve Bank of India monetary policy decisions and their impact on the economy.',
       theme: 'Global Economy',
-      confidence: 0.92,
       insights: [
         'Interest rate decisions significantly impact inflation expectations',
         'RBI policy affects currency stability and foreign investment flows',
@@ -24,7 +23,6 @@ export function getMockNodes(): Node[] {
       community: 0,
       description: 'Comprehensive analysis of worldwide currency exchange rate movements and their underlying factors.',
       theme: 'Global Economy',
-      confidence: 0.88,
       insights: [
         'USD strength affects emerging market currencies disproportionately',
         'Central bank interventions have limited long-term effectiveness',
@@ -38,7 +36,6 @@ export function getMockNodes(): Node[] {
       community: 0,
       description: 'Examination of the inverse relationship between US Dollar strength and gold prices.',
       theme: 'Gold',
-      confidence: 0.95,
       insights: [
         'Strong USD typically leads to lower gold prices',
         'Gold serves as inflation hedge during dollar weakness',
@@ -52,7 +49,6 @@ export function getMockNodes(): Node[] {
       community: 0,
       description: 'Analysis of global inflation patterns and their economic implications.',
       theme: 'Global Economy',
-      confidence: 0.87,
       insights: [
         'Supply chain disruptions contribute to persistent inflation',
         'Energy prices remain a key inflation driver',
@@ -66,7 +62,6 @@ export function getMockNodes(): Node[] {
       community: 0,
       description: 'Expert predictions and analysis of Euro to US Dollar exchange rate movements.',
       theme: 'Global Economy',
-      confidence: 0.82,
       insights: [
         'ECB policy divergence from Fed affects EUR/USD parity',
         'Economic growth differentials drive currency expectations',
@@ -95,7 +90,6 @@ export function getMockNodes(): Node[] {
       community: 1,
       description: 'Impact analysis of trade tariffs on American retail sector operations and pricing.',
       theme: 'Global Economy',
-      confidence: 0.91,
       insights: [
         'Retailers face margin pressure from increased import costs',
         'Consumer prices likely to rise as tariffs are passed through',
@@ -113,7 +107,6 @@ export function getMockNodes(): Node[] {
       community: 1,
       description: 'Comprehensive analysis of Trump administration tariff policies and their economic effects.',
       theme: 'Global Economy',
-      confidence: 0.89,
       insights: [
         'Tariff policies aim to protect domestic manufacturing',
         'Retaliatory tariffs create complex global trade dynamics',
